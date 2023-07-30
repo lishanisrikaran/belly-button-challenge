@@ -148,14 +148,6 @@ function optionChanged() {
 // -------------------------------------------------------------------------------------------------------------------------------
 // Section 4 - Default plots for the Belly Button Diversity Dashboard.
 
-// Sets up default bar plot, bubble chart, and demographic info.
-
-// Retreives the belly button biodiversity JSON data.
-d3.json(url).then(function (data) {
-  
-  // Sets the default sample to be the first object in the samples array (used for the bar plot and bubble chart).
-  const defaultSample = data.samples[0];
-  
-  // Calls optionChanged() function with the defaultSample as it's parameter.
-  optionChanged(defaultSample);
-});
+// The Test Subject ID No.: 940 is always the initial value shown on the dropdown menu, therefore, if optionChanged() is called, the default data will default to sample one. 
+// Note: the dropdown options originate from the names array which corresponds with the samples array order. 
+optionChanged()
