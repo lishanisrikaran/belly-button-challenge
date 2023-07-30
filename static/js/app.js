@@ -3,7 +3,7 @@
 // CONTENTS:
 // Section 1 - Connecting to the API and accessing it's data.
 // Section 2 - Adding dropdown options to the Belly Button Diversity Dashboard.
-// Section 3 - Creating Dynamic Bar Plot, Bubble Chart, and Inserting Demographic Info.
+// Section 3 - Creating a Dynamic: Bar Plot, Bubble Chart, and Demographic Info Tile for the Belly Button Diversity Dashboard.
 // Section 4 - Default plots.
 
 
@@ -146,7 +146,7 @@ function optionChanged() {
 }
     
 // -------------------------------------------------------------------------------------------------------------------------------
-// Section 4 - Default plots.
+// Section 4 - Default plots for the Belly Button Diversity Dashboard.
 
 // Sets up default bar plot, bubble chart, and demographic info.
 
