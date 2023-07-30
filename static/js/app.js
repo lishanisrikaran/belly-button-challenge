@@ -1,7 +1,9 @@
 // The following script is broken down into X sections, please see below contents for easier navigation:
-// Section 1 - Connecting to API and accessing it's data.
-// Section 2 - Adding dropdown options.
-// Section 3 - Creating Dynamic Bar Plot and Bubble Chart.
+
+// CONTENTS:
+// Section 1 - Connecting to the API and accessing it's data.
+// Section 2 - Adding dropdown options to the Belly Button Diversity Dashboard.
+// Section 3 - Creating Dynamic Bar Plot, Bubble Chart, and Inserting Demographic Info.
 // Section 4 - Default plots.
 
 
@@ -12,7 +14,7 @@
 // Defines a constant that stores the belly button biodiversity API link.
 const url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json";
 
-// Retrieves the JSON data from the host and outputs a message in console to confirm if the promise has been furfilled.
+// Retrieves the JSON data from the host and outputs a message in console to confirm if the promise has been fulfilled.
 const dataPromise = d3.json(url);
 console.log("Data Promise: ", dataPromise);
 
@@ -22,28 +24,29 @@ d3.json(url).then(function(data) {
 });
 
 // -------------------------------------------------------------------------------------------------------------------------------
-// Section 2 - Adding dropdown options.
+// Section 2 - Adding dropdown options to the Belly Button Diversity Dashboard.
 
-// Adding dropdown options for each individual (This will appear visually, beneath'Test Subject ID No.' on the index webpage). 
+// Adding dropdown options for each individual in the dataset (this will appear visually, beneath 'Test Subject ID No.' on the index webpage [Belly Button Diversity Dashboard]). 
 
 // Retrieves the belly button biodiversity JSON data.
 d3.json(url).then(function(data) {
   
-  // Extracts each individual's ID which will be added to the webpage's dropdown menu.
-  let names = data.names;
+  // Extracts the names array from the belly button biodiversity JSON data, this array contains each individual's ID that will need to be added to the 'Test Subject ID No.'
+  // dropdown menu.
+  const names = data.names;
 
-  // Selects the dropdown menu ('selDataset' is the id of the dropdown's element in the index.HTML code). 
-  let dropdownMenu = d3.select("#selDataset");
+  // Selects the dropdown menu element ('selDataset' is the id of the dropdown menu's element in the webpage's HTML code). 
+  const dropdownMenu = d3.select("#selDataset");
 
-  // Selects all the option tags underneath the dropdown menu element and appends to this list by adding each individual's ID.
-  let options = dropdownMenu.selectAll("option").data(names);
+  // Selects all the option tags underneath the dropdown menu's HTML element and appends an option for each individual's ID in the names array.
+  const options = dropdownMenu.selectAll("option").data(names);
   options.enter().append("option").text(name => name);
 });
 
 // -------------------------------------------------------------------------------------------------------------------------------
-// Section 3 - Creating Dynamic Bar Plot and Bubble Chart.
+// Section 3 - Creating a Dynamic: Bar Plot, Bubble Chart, and Demographic Info Tile for the Belly Button Diversity Dashboard.
 
-// Creates a dynamic bar plot and bubble chart with event handlers.
+// Creates a dynamic bar plot, bubble chart, and demographic info tile with event handler.
 
 // Calls updatePlotly() function whenever the dropdown option is changed. 
 d3.selectAll("#selDataset").on("change", updatePlotly);
@@ -51,26 +54,28 @@ d3.selectAll("#selDataset").on("change", updatePlotly);
 // updatePlotly() function defined:
 function updatePlotly() {
   
-    // Retreives the belly button biodiversity JSON data.
+    // Retrieves the selected subject ID's sample data for the bar chart and bubble chart:
+  
+    // Retrieves the belly button biodiversity JSON data.
     d3.json(url).then(function (data) {
 
-      // Assigns the dropdown option's element to a constant and extracts it's value.
-      const dropdownMenu = d3.select("#selDataset");
-      const selectedSampleId = dropdownMenu.property("value");
+      // Assigns the the selected dropdown ID to a constant which is retrieved from the dropdown menu elements' value.
+      const selectedId = d3.select("#selDataset").property("value");
          
-      // Looks at the samples array which is contained with the belly button biodiversity JSON data and extracts the first object where the 
-      // id matches the selected dropdown id. 
-      const selectedSample = data.samples.filter(individual => individual.id === selectedSampleId)[0];
+      // Filters the samples array contained within the belly button biodiversity JSON data; the first object where the id value matches the selected dropdown id is retrieved. 
+      const selectedSample = data.samples.filter(sample => sample.id === selectedId)[0];
 
-      // Extracts each of the chart elements required: (sample_values, otu_ids, otu_labels) and slices the top 10 results of each 
-      // and reverses their order to accommodate Plotly's defaults.
+      
+      // Trace 1 - Horizontal Bar Plot:
+      
+      // Extracts the bar chart data which required for plotting: (sample_values, otu_ids, otu_labels), slices the top 10 results for the selected sample and reverses their 
+      // order to accommodate Plotly's defaults.
+      // Note: The sample_values are already sorted by descending order in the JSON object. 
       const sampleValues = selectedSample.sample_values.slice(0, 10).reverse();
       const otuIds = selectedSample.otu_ids.slice(0, 10).map(id => `OTU ${id}`).reverse();
       const otuLabels = selectedSample.otu_labels.slice(0, 10).reverse();
-
-
-      // Trace 1 - Bar Chart:
-      // Traces the individual's data and places into an array so it is ready for the bar chart's render. 
+      
+      // Traces the subject ID's data and places into an array so it is ready for the horizontal bar plot's render. 
       const trace1 = [{
         x: sampleValues,
         y: otuIds,
@@ -78,22 +83,24 @@ function updatePlotly() {
         type: "bar",
         orientation: "h"
       }];
-      // Applies title and margins to bar chart layout. 
-      const barLayout = {
+      
+      // Applies title and axis labels to the bar plot's layout. 
+      const barChartLayout = {
         title: "Top 10 OTUs found in the individual",
-        margin: {
-          l: 100,
-          r: 50,
-          t: 50,
-          b: 50
+        xaxis: {
+          title: "Sample Value",
+        },
+        yaxis: {
+          title: "OTU ID",
         }
       };
+      
       // Renders the bar plot to the div tag with id "bar".
-      Plotly.newPlot("bar", trace1, barLayout);
+      Plotly.newPlot("bar", trace1, barChartLayout);
     
 
       // Trace 2 - Bubble Chart:
-      // Traces the individual's data and places into an array so it is ready for the bubble chart's render. 
+      // Traces the subject ID's (sample_values, otu_ids, otu_labels) data and places into an array so it is ready for the bubble chart's render. 
       const trace2 = [{
         x: selectedSample.otu_ids,
         y: selectedSample.sample_values,
@@ -105,34 +112,50 @@ function updatePlotly() {
           colorscale: 'Earth' 
         }
        }];
-      // Applies a title and layout to the bubble chart.
-      const bubbleLayout = {
-        title: "Bubble Chart - Belly Button Biodiversity",
+      
+       // Applies a title and axis labels to the bubble chart's layout.
+      const bubbleChartLayout = {
+        title: "Belly Button Biodiversity",
         xaxis: {
           title: "OTU ID",
         },
         yaxis: {
           title: "Sample Value",
         }
-    };
-    // Renders the bubble chart to the div tag with id "bubble".
-    Plotly.newPlot("bubble", trace2, bubbleLayout);
+      };
     
+    
+      // Renders the bubble chart to the div tag with id "bubble".
+      Plotly.newPlot("bubble", trace2, bubbleChartLayout);
+
+
+      // Displays the metadata key-value pairs in the 'Demographic Info' tile.
+
+      // Filters the metadata array contained within the belly button biodiversity JSON data; the first object where the id value matches the selected dropdown id is retrieved. 
+      const selectedMetadata = data.metadata.filter(metadata => metadata.id === parseInt(selectedId))[0];
+
+      // Assigns the demographic info tile's element to a constant and clears it's existing content.
+      const demographicInfo = d3.select("#sample-metadata");
+      demographicInfo.html(""); 
+
+      // Appends a paragraph to the 'Demographic Info' tile's element for each key, value pair contained in the selected metadata object.
+      Object.entries(selectedMetadata).forEach(([key, value]) => {
+        demographicInfo.append("p").text(`${key}: ${value}`);
+    });
   });
+}
     
-};
-  
 // -------------------------------------------------------------------------------------------------------------------------------
 // Section 4 - Default plots.
 
-// Sets the default bar plot and bar chart to use the data from the first sample in the samples array:
+// Sets up default bar plot, bubble chart, and demographic info.
 
 // Retreives the belly button biodiversity JSON data.
 d3.json(url).then(function (data) {
-  // Sets the default sample to be the first object in the samples array.
+  
+  // Sets the default sample to be the first object in the samples array (used for the bar plot and bubble chart).
   const defaultSample = data.samples[0];
+  
   // Calls updatePlotly() function with the defaultSample as it's parameter.
   updatePlotly(defaultSample);
 });
-
-
