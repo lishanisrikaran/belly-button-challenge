@@ -49,10 +49,10 @@ d3.json(url).then(function(data) {
 // Creates a dynamic bar plot, bubble chart, and demographic info tile with event handler.
 
 // Calls updatePlotly() function whenever the dropdown option is changed. 
-d3.selectAll("#selDataset").on("change", updatePlotly);
+d3.selectAll("#selDataset").on("change", optionChanged);
 
 // updatePlotly() function defined:
-function updatePlotly() {
+function optionChanged() {
   
     // Retrieves the selected subject ID's sample data for the bar chart and bubble chart:
   
@@ -157,5 +157,5 @@ d3.json(url).then(function (data) {
   const defaultSample = data.samples[0];
   
   // Calls updatePlotly() function with the defaultSample as it's parameter.
-  updatePlotly(defaultSample);
+  optionChanged(defaultSample);
 });
