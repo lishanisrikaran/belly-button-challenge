@@ -146,8 +146,12 @@ function optionChanged() {
 }
     
 // -------------------------------------------------------------------------------------------------------------------------------
-// Section 4 - Default plots for the Belly Button Diversity Dashboard.
+// Section 4 - Default plots and demographic info for the Belly Button Diversity Dashboard.
 
 // The Test Subject ID No.: 940 is always the initial value shown on the dropdown menu, therefore, if optionChanged() is called, the default data will default to sample one. 
 // Note: the dropdown options originate from the names array which corresponds with the samples array order. 
-optionChanged()
+function init() {
+  optionChanged();
+}
+
+init();
