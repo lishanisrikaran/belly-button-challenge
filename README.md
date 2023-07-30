@@ -10,7 +10,6 @@ The dataset reveals that a small handful of microbial species (also called opera
 <li> A horizontal bar chart - displays the top 10 OTUs and their sample values which were found in the selected subject ID from the dropdown menu</li>
 <li> A bubble chart - displays all the otu id's and their sample values of the selected subject ID from the dropdown menu</li>
 <li> Demographic info tile - shows meta data about the selected subject ID from the dropdown menu</li>
-
-
+<br>
 Further Reading:
 http://robdunnlab.com/projects/belly-button-biodiversity/  
